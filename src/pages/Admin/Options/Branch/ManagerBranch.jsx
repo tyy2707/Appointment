@@ -10,6 +10,7 @@ import { storage } from "../../../../firebase";
 import { v4 } from "uuid";
 import { AppstoreAddOutlined, EditOutlined } from "@ant-design/icons";
 import AvatarGroup from "../../../../components/image-group/AvatarGroup";
+import Constants from "../../../../utils/constants";
 
 const ManagerBranch = () => {
   const [keyword, setKeyword] = useState("");
@@ -23,12 +24,14 @@ const ManagerBranch = () => {
   const [fileUploadLink, setFileUploadLink] = useState();
   const [branchId, setBranchId] = useState();
   const [departName, setDepartAddName] = useState()
+  const [province, setProvince] = useState()
   const [doctorIds, setDoctorIds] = useState()
   const [address, setAddress] = useState()
+  const [provincesSearch, setProvincesSearch] = useState();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [provincesSearch,keyword]);
 
   const fetchDataDoctor = async (branchId) => {
     if (branchId) {
@@ -58,7 +61,7 @@ const ManagerBranch = () => {
   const fetchData = async (keyword) => {
     setLoading(true)
     try {
-      const response = await Factories.getBranchList(keyword);
+      const response = await Factories.getBranchList(keyword, null, null, null, provincesSearch);
       const newData = response?.map(item => ({
         key: item?._id,
         ...item
@@ -103,6 +106,16 @@ const ManagerBranch = () => {
       ),
     },
     {
+      title: "Tỉnh/ thành phố",
+      width: 600,
+      dataIndex: "province",
+      render: (text) => (
+        <div className="">
+          {Constants.vietnamProvinces.find(i => i.value == text)?.label}
+        </div>
+      ),
+    },
+    {
       title: "Địa chỉ",
       width: 600,
       dataIndex: "address",
@@ -129,6 +142,7 @@ const ManagerBranch = () => {
             variant="outline"
             onClick={() => {
               setDepartAddName(record?.name)
+              setProvince(record?.province)
               setFileUploadLink(record?.image)
               setAddress(record?.address)
               setOpenUpdateBranch(record)
@@ -150,6 +164,7 @@ const ManagerBranch = () => {
     const data = {
       name: departName,
       image: fileUploadLink,
+      province: province,
       address: address,
     }
     try {
@@ -157,6 +172,9 @@ const ManagerBranch = () => {
       if (resp) {
         ToastNoti();
         fetchData()
+        setDepartAddName()
+        setAddress()
+        setProvince()
         onCloseModalAddField()
       } else {
         ToastNotiError(resp?.message);
@@ -170,6 +188,7 @@ const ManagerBranch = () => {
     const data = {
       _id: openUpdateBranch?._id,
       name: departName,
+      province: province,
       image: fileUploadLink,
       address: address,
     }
@@ -179,6 +198,7 @@ const ManagerBranch = () => {
         ToastNoti();
         fetchData()
         resetFill()
+        setProvince()
         setOpenUpdateBranch()
       } else {
         ToastNotiError(resp?.message);
@@ -260,7 +280,7 @@ const ManagerBranch = () => {
 
   function handleReset() {
     setKeyword();
-    fetchData()
+    setProvincesSearch()
   }
   function handleSearch() {
     fetchData(keyword)
@@ -299,24 +319,38 @@ const ManagerBranch = () => {
       console.error('Error uploading file:', error);
     });
   }
+
   return (
     <div className="booking-container " >
       <div className="booking-title">
         <span className='uppercase text-3xl'>Chi nhánh bệnh viện
         </span>
       </div>
-      <div className="booking-search flex flex-row justify-between">
-        <Input
-          placeholder="Tìm kiếm theo mã, tên người thuê, ..."
-          size="middle "
-          value={keyword}
-          className='w-[50%]'
-          onKeyDown={(e) => handleKeyDown(e)}
-          onChange={(e) => handleOnChangeInput(e)} />
+      <div className="booking-search flex flex-row justify-between ">
+        <div className="flex flex-row gap-2 w-2/3">
+          <Input
+            placeholder="Tìm kiếm theo mã, tên người thuê, ..."
+            size="middle "
+            value={keyword}
+            className="w-2/3"
+            onKeyDown={(e) => handleKeyDown(e)}
+            onChange={(e) => handleOnChangeInput(e)} />
+          <Select
+            type="text"
+            className="w-1/3"
+            placeholder="Nhập tỉnh/thành phố"
+            options={Constants.vietnamProvinces}
+            value={provincesSearch}
+            onChange={(e) => setProvincesSearch(e)}
+          />
+        </div>
+
         <div className="flex flex-row gap-1">
           <Button
             variant="outlined"
-            onClick={handleReset}
+            onClick={() => {
+              handleReset()
+            }}
           >
             Mặc định
           </Button>
@@ -415,6 +449,15 @@ const ManagerBranch = () => {
                   onChange={onChangeDataAddField}
                   name="name"
                 />
+                <Select
+                  type="text"
+                  style={{ width: '100%' }}
+                  placeholder="Nhập tỉnh/thành phố"
+                  className='add-modal-input my-2'
+                  options={Constants.vietnamProvinces}
+                  onChange={(e) => setProvince(e)}
+                  name="address"
+                />
                 <Input
                   type="text"
                   style={{ width: '100%' }}
@@ -436,7 +479,7 @@ const ManagerBranch = () => {
         {/* sua thong tin benh vien */}
         <Modal
           width={800}
-          title="Sủa thông tin bệnh viện"
+          title="Sửa thông tin bệnh viện"
           open={openUpdateBranch}
           onCancel={() => {
             resetFill()
@@ -474,6 +517,16 @@ const ManagerBranch = () => {
                   value={departName}
                   onChange={onChangeDataAddField}
                   name="name"
+                />
+                <Select
+                  type="text"
+                  style={{ width: '100%' }}
+                  placeholder="Nhập tỉnh/thành phố"
+                  className='add-modal-input my-2'
+                  options={Constants.vietnamProvinces}
+                  onChange={(e) => setProvince(e)}
+                  name="address"
+                  value={province}
                 />
                 <Input
                   type="text"
@@ -572,7 +625,7 @@ const ManagerBranch = () => {
         </Modal>
 
       </div>
-    </div>
+    </div >
   );
 };
 

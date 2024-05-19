@@ -7,7 +7,6 @@ import { Star } from '@mui/icons-material';
 const DoctorInfoFeedback = (props) => {
     const { id } = props
     const [dataList, setDataList] = useState([]);
-
     const fetchData = async () => {
         try {
             const response = await Factories.getFeedBack(id);
@@ -23,8 +22,13 @@ const DoctorInfoFeedback = (props) => {
     return (
         <div className='flex flex-col min-w-[300]'>
             <div className="flex flex-col gap-2 justify-center items-center py-2">
-                <span className="text-xl text-blue2 font-bold">Đánh giá từ bệnh nhân</span>
+                <span className="text-xl text-blue2 font-bold text-left">Đánh giá từ bệnh nhân</span>
                 {/* list */}
+                {dataList?.length === 0 &&
+                    <div >
+                        Chưa có lượt đánh giá
+                    </div>
+                }
                 {dataList?.map(item => (
                     <div key={item?._id} className="flex flex-col w-full p-2 gap-2 border-b rounded-md border-1 border-spacing-1">
                         <div className="flex flex-row gap-2">

@@ -25,15 +25,28 @@ const BookingPage = () => {
     const searchParams = new URLSearchParams(location.search);
     // Lấy giá trị của tham số type từ query string
     const type = searchParams.get('type');
-    console.log("🚀 ~ BookingPage ~ type:", type)
+    const departId = searchParams.get('dp');
+    const brandhId= searchParams.get('br');
     const { handleSubmit, setValue, watch, } = useForm();
     const [typeChoose, setType] = useState()
     const [step, setStep] = useState(1)
+    console.log("🚀 ~ BookingPage ~ step:", step)
     const watchFacility = watch('Facility')
     const watchDataSubmit = watch()
+    console.log("🚀 ~ BookingPage ~ watchDataSubmit:", watchDataSubmit)
     const watcDoctor = watch('Doctor')
     const watchSpecialty = watch('Specialty')
     const watchShift = watch('Shift')
+
+    useEffect(() => {
+        if (departId && brandhId) {
+            setType(1)
+            setValue('Type', 1)
+            setValue('Specialty', departId)
+            setValue('Facility', brandhId)
+            setStep(4)
+        }
+    }, [departId,brandhId])
 
     useEffect(() => {
         if (type) {

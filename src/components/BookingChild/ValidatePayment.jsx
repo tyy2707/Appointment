@@ -44,7 +44,7 @@ const DescriptionPayment = props => {
                                             Bênh viện
                                         </span>
                                     </div>
-                                    <span className='text-base'>{data?.Branch.name}</span>
+                                    <span className='text-base'>{data?.Branch?.name}</span>
                                 </div>
                                 <div className='w-full flex flex-row justify-between items-center  border-b-gray-light pb-1 border-b border-b-gray-light pb-1 border-b'>
                                     <div className="flex flex-row gap-4">

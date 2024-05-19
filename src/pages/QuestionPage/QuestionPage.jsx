@@ -24,6 +24,7 @@ const QuestionPage = () => {
     const [questionList, setquestionList] = useState([]);
     const [questionListPage, setquestionListPage] = useState([]);
     const [dpList, setDpList] = useState([]);
+    console.log("🚀 ~ QuestionPage ~ dpList:", dpList)
     const [page, setPage] = useState(1);
     const pageSize = 10;
     useEffect(() => {
@@ -100,6 +101,8 @@ const QuestionPage = () => {
 
     const fetchDataDp = async () => {
         setLoading(true)
+        // setLoading(true)
+        // setLoading(true)
         try {
             const response = await Factories.getDepartmentList();
             const newList = response.map(item => ({

@@ -141,7 +141,8 @@ export default function ReactBigCalendar(props) {
             form.setFieldsValue({
                 branchName: openModelDetail.branchName,
                 service: openModelDetail.service,
-                doctorId: openModelDetail.doctorId,
+                doctorId: openModelDetail.doctorId?._id,
+                doctorName: openModelDetail.doctorId?.fullName,
                 departmentName: openModelDetail.departmentName,
                 date: getDate(openModelDetail?.date, 4),
                 price: openModelDetail.price,
@@ -206,6 +207,13 @@ export default function ReactBigCalendar(props) {
                                 message: 'Bạn chưa thuộc bệnh viên nào cả.',
                             },
                         ]}
+                    >
+                        <Input disabled />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Tên bác sĩ"
+                        name="doctorName"
                     >
                         <Input disabled />
                     </Form.Item>

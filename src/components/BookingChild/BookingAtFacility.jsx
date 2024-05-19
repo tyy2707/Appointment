@@ -8,17 +8,19 @@ import BG1 from '../../assets/images/bg-book.png'
 import IcLocation from '../../assets/icon/ic-location.svg'
 import Factories from "../../services/FactoryApi";
 import { ToastNotiError } from "../../utils/Utils";
-import { Spin } from "antd";
+import { AutoComplete, Select, Spin } from "antd";
+import Constants from "../../utils/constants";
 
 const BookingAtFacility = (props) => {
     const { type, onChangeFacility } = props
     const [page, setPage] = useState(0);
     const [listData, setListData] = useState([]);
+    const [provincesSearch, setProvincesSearch] = useState();
     const [loading, setLoading] = useState();
     const fetchData = async (keyword) => {
         try {
             setLoading(true)
-            const response = await Factories.getBranchList(keyword);
+            const response = await Factories.getBranchList(keyword, null,null,null,provincesSearch);
             setListData(response);
             setLoading(false)
         } catch (error) {
@@ -27,13 +29,15 @@ const BookingAtFacility = (props) => {
     };
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [provincesSearch]);
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
     const handleClickFacility = (id) => {
         onChangeFacility(id)
     };
+
+
     return (
         <div className="flex flex-col w-full bg-blue3 ">
             <div className="flex py-24 h-[300px]" style={{ background: `url(${BG1})`, backgroundSize: 'cover' }}>
@@ -50,7 +54,7 @@ const BookingAtFacility = (props) => {
             </div>
 
             <div className="flex flex-col justify-center items-center mt-14 ">
-                <InputSearch onChangeInput={(value) => fetchData(value)} />
+                <InputSearch onChangeSelect={(e) => setProvincesSearch(e)}  options={Constants.vietnamProvinces}  isHaveSelect onChangeInput={(value) => fetchData(value)} />
                 {loading ? <Spin className="my-10" size="large" />
                     :
                     <>

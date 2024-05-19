@@ -1,5 +1,5 @@
 /* eslint-disable no-dupe-keys */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Logo from '../../assets/logo/header_logo.svg'
 import BG1 from '../../assets/images/bg_home_1.webp';
 import IM1 from '../../assets/images/im-home-1.webp';
@@ -27,10 +27,16 @@ import Card from '../../components/Card/Card';
 import ButonBooking from '../../components/Button/ButonBooking';
 import { useNavigate } from 'react-router-dom';
 import Login from '../Login';
+import Factories from '../../services/FactoryApi';
+import { ToastNotiError } from '../../utils/Utils';
+import { Divider } from '@mui/material';
+import { Image } from 'antd';
+import useOnClickOutside from '../../hook/use-onclick-outside';
 
 const HomePage = ({ isShowLogin }) => {
     const [index, setIndex] = useState(0);
-    const [placeholder, setPlaceholder] = useState("Tìm kiếm bác sĩ, chuyên khoa...");
+    const [inputSearch, setInputSearch] = useState();
+    const [placeholder, setPlaceholder] = useState("Tìm kiếm chuyên khoa...");
     const navigate = useNavigate()
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -53,7 +59,41 @@ const HomePage = ({ isShowLogin }) => {
         setPlaceholder("");
     };
 
+    function handleChangeInput(e) {
+        const timeoutId = setTimeout(() => {
+            setInputSearch(e.target.value)
+            clearTimeout(timeoutId)
+        }, 600);
+    }
+
+    const [listDataDP, setListDataDP] = useState([]);
+
+    async function fetchDataDepartment(inputSearch) {
+        const response = await Factories.getDepartmentList(null, inputSearch);
+        if (response) {
+            setListDataDP(response)
+        } else {
+            ToastNotiError()
+        }
+    }
+    useEffect(() => {
+        if (inputSearch && inputSearch != '') {
+            fetchDataDepartment(inputSearch)
+        } else {
+            setListDataDP()
+        }
+    }, [inputSearch])
     const navigator = useNavigate()
+
+    const dropRef = useRef();
+    const handleClickOutside = () => {
+        setInputSearch();
+    };
+    useOnClickOutside(dropRef, handleClickOutside);
+
+    function handleClickDP(br,dp){
+        navigate(`/booking?br=${br}&dp=${dp}`)
+    }
     return (
         <div className='w-full  flex  flex-col justify-center'>
             <div className='flex  flex-col justify-center items-center w-full h-[600px]' style={{ backgroundSize: 'cover', background: `url(${BG1})` }}>
@@ -69,41 +109,60 @@ const HomePage = ({ isShowLogin }) => {
                             type="text"
                             className="pl-12 bg-transparent outline-none text-sm font-medium rounded-3xl p-4 w-full focus:border-blue-500 transition-all pr-14"
                             placeholder={placeholder.slice(0, index)}
+                            onChange={(e) => handleChangeInput(e)}
                             onInput={handleInput}
                         />
                     </div>
+                    {listDataDP &&
+                        <div ref={dropRef} style={{ left: '-50px' }} className='absolute z-10 bg-[white] rounded-2xl top-30 left-["-20px"] w-[700px] h-[350px] overflow-scroll shadow-xl p-7 pt-3'>
+                            <span className=' bg-[white] w-full h-30 uppercase font-bold text-blue2 text-xl'>
+                                Cơ sở y tế
+                            </span>
+                            {listDataDP?.map(i => (
+                                <button key={i?._id} className="flex flex-row mt-3 gap-3" onClick={() => handleClickDP(i?.branchInfo?._id, i?._id)}>
+                                    <div className="flex justify-center items-center  ">
+                                        <Image width={50} height={50} className='rounded-lg' src={i?.branchInfo?.image} />
+                                    </div>
+                                    <div className="flex flex-col justify-between">
+                                        <span className="text-left font-bold text-blue2">{i?.branchInfo?.name} - {i?.name} </span>
+                                        <span className="text-left  font-bold text-gray ">{i?.branchInfo?.address}  </span>
+                                    </div>
+                                    <Divider />
+                                </button>
+                            ))}
+                        </div>}
                     <p className='text-sm text-center'>
-                        Đặt khám nhanh - Lấy số thứ tự trực tuyến - Tư vấn sức khỏe từ xa
+                        Đặt khám nhanh - Tư vấn sức khỏe từ xa
                     </p>
                 </div>
 
                 <div className="flex flex-col ">
                     <div className='relative pt-40'>
-                        <div className="flex flex-row gap-4">
-                            <button onClick={() => navigator('/booking?type=1')} className="w-32 h-32 hover:shadow  rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
-                                <img className='w-12' src={CAL} />
-                                <p className='text-xs text-center  border-none w-[70px] break-all'>Đặt khám tại cơ sở</p>
+                        <div className="flex flex-row gap-8">
+                            <button onClick={() => navigator('/booking?type=1')} className="w-48 h-48 hover:shadow  rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
+                                <img className='w-22' src={CAL} />
+                                <p className='text-xl text-center  border-none w-[170px] break-all'>Đặt khám tại cơ sở</p>
                             </button>
-                            <button onClick={() => navigator('/booking?type=2')} className="w-32 hover:shadow   h-32 rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
+                            {/* <button onClick={() => navigator('/booking?type=2')} className="w-32 hover:shadow   h-32 rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
                                 <img className='w-12' src={ICH2} />
                                 <p className='border-none text-xs text-center  w-[80px] break-all'>Đặt khám theo bác sĩ</p>
+                            </button> */}
+                            <button onClick={() => navigator('/question/3')} className="w-48 h-48 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
+                                <img className='w-22' src={ICH3} />
+                                <p className='text-xl text-center w-[220px] break-all'>Tư vấn trực tuyến</p>
                             </button>
-                            <button onClick={() => navigator('/question/3')} className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
-                                <img className='w-12' src={ICH3} />
-                                <p className='text-xs text-center w-[105px] break-all'>Tư vấn khám bệnh trực tuyến</p>
-                            </button>
-                            <div className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
+                            {/* <div className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
                                 <img className='w-12' src={ICH4} />
                                 <p className='text-xs text-center  w-[67px] break-all'>Đặt lịch xét nghiệm</p>
-                            </div>
-                            <div className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
+                            </div> */}
+                            {/* <div className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
                                 <img className='w-12' src={ICH5} />
                                 <p className='text-xs text-center  w-[60px] break-all'>Gói khám sức khỏe</p>
-                            </div>
-                            <div className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
+                            </div> */}
+                            {/* <div className="w-32 h-32 hover:shadow    rounded-xl gap-3 flex-col bg-[#fff] flex justify-center items-center">
                                 <img className='w-12' src={ICH6} />
                                 <p className='text-xs text-center  w-[70px] break-all'>Đặt lịch tiêm chủng</p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -215,23 +274,23 @@ const HomePage = ({ isShowLogin }) => {
                             <Card
                                 src={ICH9}
                                 title={'50+'}
-                                content={'Cơ sở Y tế'}
+                                content={'Chuyên khoa'}
                             />
                             <Card
                                 src={ICH10}
                                 title={'1000+'}
                                 content={'Bác sĩ'}
                             />
-                            <Card
+                            {/* <Card
                                 src={ICH11}
                                 title={'138K+'}
                                 content={'Lượt truy cập tháng'}
-                            />
-                            <Card
+                            /> */}
+                            {/* <Card
                                 src={ICH12}
                                 title={'4600+'}
                                 content={'Lượt truy cập trong ngày'}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>

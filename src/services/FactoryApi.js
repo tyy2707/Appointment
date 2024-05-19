@@ -2,13 +2,16 @@ import ApiConstants from "../adapter/ApiConstants";
 import ApiOperation from "../adapter/ApiOperation";
 
 const Factories = {
-  getBranchList: async (keyword, id, KeywordDP, doctorId) => {
+  getBranchList: async (keyword, id, KeywordDP, doctorId,province) => {
     let params = {};
     if (keyword) {
       params.keyword = keyword
     }
     if (id) {
       params.id = id
+    }
+    if (province) {
+      params.province = province
     }
     if (KeywordDP) {
       params.KeywordDP = KeywordDP
@@ -59,8 +62,11 @@ const Factories = {
       params: params
     });
   },
-  getDepartmentList: async (id) => {
+  getDepartmentList: async (id,keyword) => {
     let params = {}
+    if (keyword) {
+      params.keyword = keyword
+    }
     if (id) {
       params.branch = id
     }

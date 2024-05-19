@@ -4,6 +4,7 @@ import { useState } from 'react';
 const InputSearch = (props) => {
     const { className, isHaveSelect = false, onChangeInput = () => { }, placeholder, placeholderSelect = 'Tìm kiếm thành phố', options = [] } = props
     const [inputSearch, setInputSearch] = useState();
+    const [selectV, setSlectV] = useState();
     function handleChangeInput(e) {
         setInputSearch(e.target.value)
         const timeoutId = setTimeout(() => {
@@ -39,6 +40,8 @@ const InputSearch = (props) => {
                 />
                 <button onClick={() => {
                     setInputSearch('')
+                    setSlectV()
+                    props.onChangeSelect()
                     onChangeInput()
                 }
                 } className=" border-none flex-shrink-0 text-slate-500">
@@ -58,7 +61,10 @@ const InputSearch = (props) => {
                     </svg>
                 </button>
                 {isHaveSelect &&
-                    <Select placeholder={placeholderSelect} className='selectAntd' options={options} />
+                    <Select value={selectV} onChange={(e) => {
+                        setSlectV(e)
+                        props.onChangeSelect(e)
+                    }} placeholder={placeholderSelect} className='selectAntd w-64' options={options} />
                 }
             </div>
         </div>
