@@ -1,17 +1,17 @@
-import { useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import HM1 from '../../../assets/icon/header-menu-1.svg'
 import HM2 from '../../../assets/icon/header-menu-2.svg'
 import ICLG from '../../../assets/icon/ic-logout.svg'
-import AVT from '../../../assets/icon/avatar.svg'
 import { Popover } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import Login from '../../../pages/Login';
-import { AuthContext } from '../../../context/auth.context';
 import { useNavigate } from 'react-router-dom';
 
 const DropdownHeader = () => {
     const [anchorEl, setAnchorEl] = useState(null)
-    const { user, logout } = useContext(AuthContext);
+    // const { user, logout } = useContext(AuthContext);
+    const user = JSON.parse(localStorage.getItem("user"));
+
     const navigate = useNavigate()
 
     const handleClick = (event) => {
@@ -21,7 +21,7 @@ const DropdownHeader = () => {
         setAnchorEl(null);
     };
     const handleLogout = () => {
-        logout()
+        // logout()
         // Also clear the local storage
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
@@ -32,7 +32,11 @@ const DropdownHeader = () => {
     const [isOpenLogin, setIsOpenLogin] = useState(false);
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-
+    useEffect(() => {
+        if (!user) {
+            setIsOpenLogin(true)
+        }
+    }, [user])
     return (
         <>
             <button className="flex flex-col items-center justify-center" onClick={handleClick}>

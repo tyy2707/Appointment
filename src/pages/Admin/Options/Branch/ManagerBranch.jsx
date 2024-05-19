@@ -300,7 +300,7 @@ const ManagerBranch = () => {
     });
   }
   return (
-    <div className="booking-container " style={{ height: '100vh', overflow: 'scroll' }}>
+    <div className="booking-container " >
       <div className="booking-title">
         <span className='uppercase text-3xl'>Chi nhánh bệnh viện
         </span>

@@ -78,7 +78,7 @@ const ScheduleDoctorAdmin = () => {
     }
 
     return (
-        <div className="booking-container" style={{ height: '100vh', overflow: 'scroll' }}>
+        <div className="booking-container">
             <div className="booking-title"><span className="uppercase text-3xl">Lịch khám bác sĩ</span></div>
             <div className="booking-search flex flex-row justify-between">
                 <Select

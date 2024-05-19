@@ -85,6 +85,11 @@ export default class Constants {
     { label: "Bác sĩ phụ trách", value: 6 }
   ]
 
+  static levelRole = [
+    { label: "Admin", value: 3 },
+    { label: "Bác sĩ duyệt lịch khám", value: 4 },
+    { label: "Kế toán viên", value: 5 },
+  ]
   static optionSex = [
     {
       label: "Nam",

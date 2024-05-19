@@ -209,13 +209,13 @@ const ChartYear = (props) => {
                                 options={options1}
                             />
                         }
-                        {barData2?.labels &&
+                        {/* {barData2?.labels &&
                             <Bar
                                 style={{ height: '40vh', marginTop: 10 }}
                                 data={barData2}
                                 options={options2}
                             />
-                        }
+                        } */}
                     </div>
                     {barData3?.labels &&
                         <div>

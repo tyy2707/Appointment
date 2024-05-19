@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AccountUser from "./Options/Enterprises/AccountUser";
+import ManagerPatient from "./Options/ManagerPatient/AccountUser";
 import Booking from "./Options/Book/Booking";
 import ScheduleDoctorAdmin from "./Options/Fields/ScheduleDoctorAdmin"
 import { Layout, Menu, Button } from "antd";
@@ -11,6 +11,7 @@ import Title from "antd/es/typography/Title";
 const { Sider } = Layout;
 import Logo from '../../assets/logo/header_logo.svg'
 import ManagerBranch from "./Options/Branch/ManagerBranch";
+// import ManagerRole from "./Options/ManagerRole/AccountDoctor";
 
 const HomeAdmin = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useState("1");
@@ -23,14 +24,14 @@ const HomeAdmin = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    navigate("/");
+    navigate('/')
   }
 
   return (
     <>
       <Layout theme="light" style={{ height: '100vh' }} >
         <Sider theme="light"
-          style={{ width: 200 }}
+          style={{ width: 300, position: 'sticky' }}
         >
           <Menu
             theme="light"
@@ -46,7 +47,8 @@ const HomeAdmin = () => {
             {/* <Menu.SubMenu className="submenu" key="sub1" title="Tài Khoản"> */}
             {/* <Menu.Item key="1">Enterprises</Menu.Item> */}
             {/* </Menu.SubMenu> */}
-            <Menu.Item key="1">Người dùng</Menu.Item>
+            {/* <Menu.Item key="6">Quyền truy cập</Menu.Item> */}
+            <Menu.Item key="1">Bệnh nhân</Menu.Item>
             <Menu.Item key="2">Bác sĩ</Menu.Item>
             <Menu.Item key="4">Chi nhánh</Menu.Item>
             <Menu.Item key="5">Lịch khám bác sĩ</Menu.Item>
@@ -57,12 +59,12 @@ const HomeAdmin = () => {
               className=" absolute bottom-2 left-10 text-[#fff] "
             >Đăng xuất</Button>
           </Menu>
-
         </Sider>
 
         <Layout className={classes['container']}>
           <Layout.Content className={classes["site-layout-content"]}>
-            {selectedMenuItem === "1" && <AccountUser />}
+            {/* {selectedMenuItem === "6" && <ManagerRole />} */}
+            {selectedMenuItem === "1" && <ManagerPatient />}
             {selectedMenuItem === "2" && <AccountDoctor />}
             {selectedMenuItem === "3" && <Booking />}
             {selectedMenuItem === "4" && <ManagerBranch />}

@@ -26,8 +26,9 @@ import FBQR from '../../assets/icon/fbqr.webp';
 import Card from '../../components/Card/Card';
 import ButonBooking from '../../components/Button/ButonBooking';
 import { useNavigate } from 'react-router-dom';
+import Login from '../Login';
 
-const HomePage = () => {
+const HomePage = ({ isShowLogin }) => {
     const [index, setIndex] = useState(0);
     const [placeholder, setPlaceholder] = useState("Tìm kiếm bác sĩ, chuyên khoa...");
     const navigate = useNavigate()
@@ -51,6 +52,7 @@ const HomePage = () => {
         setIndex(0);
         setPlaceholder("");
     };
+
     const navigator = useNavigate()
     return (
         <div className='w-full  flex  flex-col justify-center'>

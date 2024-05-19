@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
-import { Table, Input, Select } from "antd";
+import { Table, Input, Select, Image } from "antd";
 import Constants from "../../../../utils/constants";
 import DropdownOperation from "../../../../components/Dropdown/DropdownOperation";
 import classes from './AccountUser.module.scss'
 import Factories from "../../../../services/FactoryApi";
-import { ToastNoti } from "../../../../utils/Utils";
+import { ToastNoti, getDate } from "../../../../utils/Utils";
 import { Avatar } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
-const AccountUser = () => {
+const ManagerPatient = () => {
   const { Search } = Input;
   const [userList, setUserList] = useState([]);
-
+  const navigate = useNavigate()
   const fetchApiList = async (value) => {
     try {
       const response = await Factories.getListPatient(value);
@@ -58,17 +59,27 @@ const AccountUser = () => {
     // },
     {
       title: 'Họ và tên',
-      width: 100,
+      width: 170,
       dataIndex: 'fullName',
       key: 'name',
       fixed: 'left',
     },
-   
+    {
+      title: 'Ảnh',
+      width: 100,
+      dataIndex: 'avatar',
+      key: 'name',
+      render: text =>
+        <Image className='shadow-md h-28' src={text} />
+    },
     {
       title: 'Ngày sinh ',
       dataIndex: 'dateOfBirth',
       width: 130,
       key: 'dateOfBirth',
+      render: (text) => (
+        <div>{getDate(text)}</div>
+      )
     },
     {
       title: 'SĐT',
@@ -77,10 +88,18 @@ const AccountUser = () => {
       key: 'phone',
     },
     {
-      title: 'Giới tính',
-      dataIndex: 'phone',
+      title: 'CCCD/CMT',
+      dataIndex: 'CCCD',
       width: 130,
       key: 'phone',
+    },
+    {
+      title: 'Giới tính',
+      dataIndex: 'gender',
+      width: 130,
+      render: (data) => <div>
+        {Constants.optionSex.find(item => item.value === data)?.label}
+      </div>,
     },
     {
       title: 'Công việc',
@@ -99,9 +118,8 @@ const AccountUser = () => {
       key: 'operation',
       width: 130,
       align: 'center',
-      render: (_, record) => (
-        <DropdownOperation isUser record={record} updateSuccess={handleReload} />
-      )
+      render: (text) => (
+        <button onClick={() => navigate(`/patient/${text._id}`)}> Xem chi tiết</button>)
     },
   ];
 
@@ -150,4 +168,4 @@ const AccountUser = () => {
   );
 };
 
-export default AccountUser;
+export default ManagerPatient;

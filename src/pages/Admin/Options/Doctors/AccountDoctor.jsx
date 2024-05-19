@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Select, Avatar, Input, Modal, Form, DatePicker, Upload, message, Spin } from "antd";
+import { Table, Select, Avatar, Input, Modal, Form, DatePicker, Upload, message, Spin, Image } from "antd";
 import classes from "./AccountDoctor.module.scss";
 import Constants from "../../../../utils/constants";
 import { toast } from "react-toastify";
@@ -8,12 +8,13 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../../firebase";
 import { v4 } from "uuid";
 import Factories from "../../../../services/FactoryApi";
-import { ToastNoti, ToastNotiError } from "../../../../utils/Utils";
+import { ToastNoti, ToastNotiError, uploadFirebase } from "../../../../utils/Utils";
 import { LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import ButtonCustom from "../../../../components/Button/ButtonCustom";
 import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import StarRating from "../../../../components/start-rating/StarRating";
+import Message from "../../../../components/UI/Message/Message";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -37,6 +38,7 @@ const AccountDoctor = () => {
   const [dataListBranch, setDataListBranch] = useState([]);
   const [valueSearch, setValueSearch] = useState();
   const [loading, setLoading] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const fetchData = async (value) => {
     setLoading(true)
@@ -87,11 +89,11 @@ const AccountDoctor = () => {
       fetchData(valueSearch);
     }
   };
-
-  const onChangeSelectHandler = (value, id) => {
-    console.log(value, id)
-  };
-
+  const [check, setCheck] = useState({
+    status: false,
+    type: "",
+    content: "",
+  });
   const columns = [
     {
       title: '#',
@@ -109,6 +111,15 @@ const AccountDoctor = () => {
       dataIndex: 'email',
       key: 'name',
       fixed: 'left',
+    },
+    {
+      title: 'Ảnh',
+      width: 100,
+      fixed: 'center',
+      dataIndex: 'avatar',
+      key: 'name',
+      render: text =>
+        <Image className='shadow-md rounded-full h-20' src={text} />
     },
     {
       title: 'Họ và Tên',
@@ -216,23 +227,6 @@ const AccountDoctor = () => {
   ];
 
   const [openModalAdd, setOpenModalAdd] = useState(false)
-  const [fileUploadLink, setFileUploadLink] = useState();
-
-  function handleChangeImage(file) {
-    if (file === null || !file) {
-      console.log('No file selected.');
-      return;
-    }
-    const uniqueFileName = `${file.name}_${v4()}`;
-    const imageRef = ref(storage, `avatar/${uniqueFileName}`);
-    uploadBytes(imageRef, file).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((downloadURL) => {
-        setFileUploadLink(downloadURL)
-      });
-    }).catch((error) => {
-      console.error('Error uploading file:', error);
-    });
-  }
 
   const onOpenModalAddField = () => {
     setOpenModalAdd(true)
@@ -296,55 +290,54 @@ const AccountDoctor = () => {
     },
   };
 
-  const [imageUrl, setImageUrl] = useState();
-  const handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (url) => {
-        setLoading(false);
-        setImageUrl(url);
+  function checkUserValidation(userInput) {
+    if (!userInput.phone) {
+      form.setError({
+        status: true,
+        type: "error",
+        content: `Số điện thoại không được để trống.`,
       });
+      return false;
     }
-  };
 
-  const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: 'none',
-      }}
-      type="button"
-    >
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div
-        style={{
-          marginTop: 8,
-          border: '1px solid #111'
-        }}
-      >
-        Upload
-      </div>
-    </button>
-  );
-
+    else if (userInput.phone.length < 9 || userInput.phone.length > 10) {
+      setCheck({
+        status: true,
+        type: "error",
+        content: `Số điện thoại không đúng định dạng`,
+      });
+      return false;
+    }
+    return true;
+  }
   const [form] = Form.useForm();
   const onFinish = async (data) => {
-    try {
-      const response = await Factories.createDoctor(data);
-      if (response._id) {
-        ToastNoti()
-        setOpenModalAdd();
+    if (checkUserValidation(data)) {
+      try {
+        setLoadingSubmit(true)
+        const newData = { ...data }
+        if (fileUpload) {
+          const url = await uploadFirebase(fileUpload);
+          if (url) {
+            newData.avatar = url
+          }
+        }
+        const response = await Factories.createDoctor(newData);
+        if (response._id) {
+          ToastNoti()
+          setOpenModalAdd();
+          fetchData()
+        } else {
+          ToastNotiError(response.error)
+        }
+        setFileUpload()
+        setImageUrl()
+        setLoadingSubmit(false)
+      } catch (error) {
+        setLoadingSubmit(false)
         fetchData()
-      } else {
-        ToastNotiError(response.error)
+        ToastNotiError(error);
       }
-    } catch (error) {
-      fetchData()
-      ToastNotiError(error);
     }
   };
   const onFinishFailed = () => {
@@ -375,8 +368,34 @@ const AccountDoctor = () => {
   }
 
   useEffect(() => { fill() }, [])
+
+  const [fileUpload, setFileUpload] = useState();
+  const [imageUrl, setImageUrl] = useState();
+  const handleChange = (e) => {
+    setFileUpload(e.target.files[0])
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    setImageUrl(url);
+  };
+
+  const changeMessage = () => {
+    setCheck({
+      status: false,
+      type: "",
+      content: "",
+    });
+  };
+
   return (
     <>
+
+      <Message
+        status={check.status}
+        type={check.type}
+        content={check.content}
+        changeMessage={changeMessage}
+      />
+
       <Modal
         width={800}
         title="Thêm bác sĩ mới"
@@ -712,8 +731,24 @@ const AccountDoctor = () => {
               </Form.Item>
 
             </div>
-            <div className="flex">
-              <Upload
+            <div className="flex h-32 flex-col">
+              <input
+                id="uploadInput"
+                type="file"
+                className='uploadInput'
+                style={{ display: 'none' }}
+                onChange={(e) => handleChange(e)}
+              />
+              <Image
+                src={imageUrl ?? ''}
+                alt="avatar"
+                style={{ width: 150, height: 150 }}
+                fallback="data:image/png;base64,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"
+              />
+              <label style={{ width: 150, padding: '2px 50px', border: '1px solid #111', borderRadius: 5 }} htmlFor="uploadInput" className='uploadButton'>
+                Upload
+              </label>
+              {/* <Upload
                 name="avatar"
                 listType="picture-circle"
                 className="avatar-uploader"
@@ -733,7 +768,7 @@ const AccountDoctor = () => {
                 ) : (
                   uploadButton
                 )}
-              </Upload>
+              </Upload> */}
             </div>
           </div>
           <Form.Item
@@ -744,6 +779,7 @@ const AccountDoctor = () => {
           >
             <ButtonCustom
               type='submit'
+              loading={loadingSubmit}
               htmlType="submit"
             >
               Lưu thông tin
@@ -785,6 +821,7 @@ const AccountDoctor = () => {
             <Button
               className="ml-2 bg-blue text-[#fff]"
               variant="contained"
+              loading={loadingSubmit}
               onClick={onOpenModalAddField} >Thêm bác sĩ</Button>
           </div>
 

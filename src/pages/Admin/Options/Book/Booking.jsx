@@ -191,7 +191,7 @@ const Booking = () => {
   };
 
   return (
-    <div className="booking-container" style={{ height: '100vh', overflow: 'scroll' }}>
+    <div className="booking-container" >
       <div className="booking-title"><span>Danh sách lịch khám</span></div>
       <div className="booking-search flex flex-row justify-between">
         <Input
