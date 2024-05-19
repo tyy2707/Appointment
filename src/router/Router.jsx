@@ -8,12 +8,15 @@ import { ProtectedRoute } from "../context/ProtectedRoute.context";
 import NotFound from "../pages/NotFound/NotFound";
 import HomePage from "../pages/Home/HomePage";
 import Profile from "../pages/Profile/Proflie";
+import AppointmentsPage from "../pages/AppointmentsPage/AppointmentsPage";
 import UpdateProfilePatient from "../pages/UpdateProfile/UpdateProfile";
 import QuestionPage from "../pages/QuestionPage/QuestionPage";
+import DoctorPage from "../pages/DoctorPage/DoctorPage";
 import BookingPage from "../pages/Booking/BookingPage";
 import CreateQuestionPage from "../pages/QuestionPage/CreateQuestionPage";
 import HomeAdmin from "../pages/Admin/HomeAdmin";
 import CreateProfilePage from "../pages/CreateProfile/CreateProfile";
+import DoctorDetailPage from "../pages/DoctorDetail/DoctorDetailPage";
 import PatientDetailPage from "../pages/PatientDetail/PatientDetailPage";
 
 
@@ -47,6 +50,24 @@ const Router = () => {
             </Layout>}
         />
         <Route
+          path="/doctor/:id" element={
+            <Layout>
+              <DoctorDetailPage />
+            </Layout>}
+        />
+        <Route
+          path="/appointments/:id" element={
+            <Layout>
+              <AppointmentsPage />
+            </Layout>}
+        />
+        <Route
+          path="/create-profile" element={
+            <Layout>
+              <CreateProfilePage />
+            </Layout>}
+        />
+        <Route
           path="/create-profile" element={
             <Layout>
               <CreateProfilePage />
@@ -71,11 +92,23 @@ const Router = () => {
             </Layout>}
         />
         <Route
+          path="/doctor" element={
+            <Layout>
+              <DoctorPage />
+            </Layout>}
+        />
+        <Route
           path="/booking" element={
             <Layout>
               <BookingPage />
             </Layout>}
         />
+        {/* <Route
+          path="/field/:id" element={
+            <LayoutSideBar>
+              <Home />
+            </LayoutSideBar>}
+        /> */}
         <Route
           path="/admin"
           element=
