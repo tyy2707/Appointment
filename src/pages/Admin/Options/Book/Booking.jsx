@@ -18,14 +18,14 @@ const Booking = () => {
   const fetchDataBookingList = async (name, dateCreate, dateBooking) => {
     try {
       setLoading(true)
-      const data = {
-        keyword: name,
-        dateCreate: dateCreate,
-        dateBooking: dateBooking,
+      const resp = await Factories.getListBooking();
+      if (name) {
+        const filteredBookings = filterBookings(resp, name);
+        setBookingList(filteredBookings);
+      }else{
+        setBookingList(resp);
       }
-      const resp = await Factories.getListBooking(data);
       setLoading(false)
-      setBookingList(resp);
     } catch (error) {
       ToastNotiError();
       setLoading(true)
@@ -33,9 +33,20 @@ const Booking = () => {
     }
   };
 
+  function filterBookings(bookings, keyword) {
+    return bookings.filter(booking => {
+      const { patientInfo, doctorInfo } = booking;
+      return (
+        (patientInfo.fullName && patientInfo.fullName.includes(keyword)) ||
+        (patientInfo.CCCD && patientInfo.CCCD.includes(keyword)) ||
+        (doctorInfo.fullName && doctorInfo.fullName.includes(keyword))
+      );
+    });
+  }
+
   useEffect(() => {
     fetchDataBookingList();
-  }, [dateCreate,DateBooking]);
+  }, [dateCreate, DateBooking]);
 
 
   const handleKeyDown = (event) => {
@@ -87,6 +98,16 @@ const Booking = () => {
       ),
     },
     {
+      title: "CCCD",
+      width: 150,
+      dataIndex: "CCCD",
+      render: (text, data) => (
+        <div className="text-data">
+          {data?.patientInfo?.CCCD}
+        </div>
+      ),
+    },
+    {
       title: "Khoa khám",
       dataIndex: "department",
       width: 240,
@@ -133,6 +154,7 @@ const Booking = () => {
       render: (value, data) => (
         <Select
           style={{ width: '100%' }}
+          disabled
           onChange={(e) => handleChangeStatusBooking(data?._id, e)}
           options={Constants.optionsStatusBooking} value={data?.status}
         />
@@ -195,25 +217,19 @@ const Booking = () => {
       <div className="booking-title"><span>Danh sách lịch khám</span></div>
       <div className="booking-search flex flex-row justify-between">
         <Input
-          placeholder="Tìm kiếm tên bệnh nhân, bác sĩ ..."
+          placeholder="Tìm kiếm tên bệnh nhân, bác sĩ, cccd ..."
           size="middle "
           value={keyword}
           onKeyDown={(e) => handleKeyDown(e)}
           onChange={(e) => handleOnChangeInput(e)} />
 
         <div className="flex flex-row gap-1">
-          <DatePicker
-            placeholder='Chọn ngày tạo'
-            style={{ minWidth: 140 }}
-            value={dateCreate ?? ''}
-            onChange={(e) => handleOnChangeDateCreate(e)}
-          />
-          <DatePicker
+          {/* <DatePicker
             style={{ minWidth: 120 }}
             value={DateBooking ?? ''}
             onChange={(e) => handleOnChangeDateBooking(e)}
-            placeholder='Chọn ngày khám booking'
-          />
+            placeholder='Chọn ngày khám '
+          /> */}
           <Button
             variant="outlined"
             style={{ minWidth: 120 }}

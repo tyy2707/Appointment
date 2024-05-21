@@ -56,10 +56,10 @@ const ChartYear = (props) => {
 
     const fetchDataTop = async (year, month) => {
         try {
-            const response = await Factories.getBookingTopDT(year, month);
+            const response = await Factories.getBookingTopDT(year, month,Status);
             if (response) {
                 const responseData = response
-                const labels = responseData.map(item => `${item.doctorId}`);
+                const labels = responseData.map(item => `${item.fullName}`);
                 const totalTime = responseData.map(item => parseInt(item.bookingCount));
                 const barData3 = {
                     labels: labels,
@@ -133,7 +133,7 @@ const ChartYear = (props) => {
                     if (label) {
                         label += ': ';
                     }
-                    label += ' h'
+                    label += ' lần'
                     return label;
                 }
             }
@@ -147,56 +147,14 @@ const ChartYear = (props) => {
                             label += ': ';
                         }
                         label += (context.raw);
-                        label += ' h';
+                        label += ' lần';
                         return label;
                     }
                 }
             }
         }
     };
-    const options2 = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        },
-        tooltips: { // Note that `tooltips` is deprecated in Chart.js 3.x in favor of `tooltip`
-            callbacks: {
-                label: function (tooltipItem, data) {
-                    let label = data.datasets[tooltipItem.datasetIndex].label || '';
-                    if (label) {
-                        label += ': ';
-                    }
-                    label += new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0
-                    }).format(tooltipItem.yLabel);
-                    return label;
-                }
-            }
-        },
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function (context) {
-                        let label = context.dataset.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        label += new Intl.NumberFormat('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND',
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0
-                        }).format(context.raw);
-                        return label;
-                    }
-                }
-            }
-        }
-    };
+
     return (
         <>
             {loading ? <Spin /> :

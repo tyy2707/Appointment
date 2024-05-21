@@ -295,7 +295,7 @@ const BookingPage = () => {
                     </div >
                 }
                 <div className="flex w-full">
-                    <div className="flex w-full justify-center items-center">
+                    <div className="flex w-full justify-center items-center   ">
 
                         {step === 2 &&
                             <BookingAtFacility type={typeChoose} onChangeFacility={(id) => handleChangeFacility(id)} />

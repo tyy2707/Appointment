@@ -11,7 +11,8 @@ import { ToastNotiError } from "../../utils/Utils";
 import { AutoComplete, Select, Spin } from "antd";
 import Constants from "../../utils/constants";
 
-const BookingAtFacility = (props) => {
+const 
+BookingAtFacility = (props) => {
     const { type, onChangeFacility } = props
     const [page, setPage] = useState(0);
     const [listData, setListData] = useState([]);
@@ -53,12 +54,12 @@ const BookingAtFacility = (props) => {
                 </div >
             </div>
 
-            <div className="flex flex-col justify-center items-center mt-14 ">
+            <div className="flex flex-col justify-center items-center mt-14  ">
                 <InputSearch onChangeSelect={(e) => setProvincesSearch(e)}  options={Constants.vietnamProvinces}  isHaveSelect onChangeInput={(value) => fetchData(value)} />
-                {loading ? <Spin className="my-10" size="large" />
+                {loading ? <Spin className="my-10  min-h-[600px]" size="large" />
                     :
                     <>
-                        <div className="max-w-[80%] 2xl:max-w-[70%]  grid grid-cols-1 xl:grid-cols-2 gap-4 py-12 sm:w-full  rounded-2xl ">
+                        <div className="max-w-[80%] 2xl:max-w-[70%]   grid grid-cols-1 xl:grid-cols-2 gap-4 py-12 sm:w-full  rounded-2xl ">
                             {listData?.map(item => (
                                 <CardCustom
                                     key={item?._id}

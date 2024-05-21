@@ -2,7 +2,7 @@ import ApiConstants from "../adapter/ApiConstants";
 import ApiOperation from "../adapter/ApiOperation";
 
 const Factories = {
-  getBranchList: async (keyword, id, KeywordDP, doctorId,province) => {
+  getBranchList: async (keyword, id, KeywordDP, doctorId, province) => {
     let params = {};
     if (keyword) {
       params.keyword = keyword
@@ -62,7 +62,7 @@ const Factories = {
       params: params
     });
   },
-  getDepartmentList: async (id,keyword) => {
+  getDepartmentList: async (id, keyword) => {
     let params = {}
     if (keyword) {
       params.keyword = keyword
@@ -91,6 +91,19 @@ const Factories = {
       url: ApiConstants.BRANCH,
       method: "POST",
       data: data,
+    });
+  },
+  updatePass: async (id,data) => {
+    return ApiOperation.request({
+      url: `${ApiConstants.UPDATE_PASS}/${id}`,
+      method: "PUT",
+      data: data,
+    });
+  },
+  getOverview: async () => {
+    return ApiOperation.request({
+      url: ApiConstants.OVERVIEW,
+      method: "GET",
     });
   },
   deleteBranch: async (data) => {
@@ -374,7 +387,7 @@ const Factories = {
       params: params,
     });
   },
-  getBookingTopDT: async (year, month, date) => {
+  getBookingTopDT: async (year, month, status) => {
     let params = {
     };
     if (year) {
@@ -383,8 +396,8 @@ const Factories = {
     if (month) {
       params.Month = month;
     }
-    if (date) {
-      params.Date = date;
+    if (status) {
+      params.Status = status
     }
     return ApiOperation.request({
       url: `${ApiConstants.BOOKING_TOP}`,

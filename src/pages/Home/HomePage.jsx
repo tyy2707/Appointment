@@ -36,6 +36,7 @@ import useOnClickOutside from '../../hook/use-onclick-outside';
 const HomePage = ({ isShowLogin }) => {
     const [index, setIndex] = useState(0);
     const [inputSearch, setInputSearch] = useState();
+    const [overview, setOverView] = useState();
     const [placeholder, setPlaceholder] = useState("Tìm kiếm chuyên khoa...");
     const navigate = useNavigate()
     useEffect(() => {
@@ -76,6 +77,21 @@ const HomePage = ({ isShowLogin }) => {
             ToastNotiError()
         }
     }
+
+    async function getOverview() {
+        const response = await Factories.getOverview();
+        console.log("🚀 ~ getOverview ~ response:", response)
+        if (response) {
+            setOverView(response)
+        } else {
+            ToastNotiError()
+        }
+    }
+
+    useEffect(() => {
+        getOverview()
+    }, [])
+
     useEffect(() => {
         if (inputSearch && inputSearch != '') {
             fetchDataDepartment(inputSearch)
@@ -91,7 +107,7 @@ const HomePage = ({ isShowLogin }) => {
     };
     useOnClickOutside(dropRef, handleClickOutside);
 
-    function handleClickDP(br,dp){
+    function handleClickDP(br, dp) {
         navigate(`/booking?br=${br}&dp=${dp}`)
     }
     return (
@@ -263,22 +279,27 @@ const HomePage = ({ isShowLogin }) => {
                         <div className="flex pt-10 flex-row justify-between flex-wrap">
                             <Card
                                 src={ICH7}
-                                title={'2.2M+'}
+                                title={overview?.bookingCount}
                                 content={'Lượt khám'}
                             />
                             <Card
                                 src={ICH8}
-                                title={'40+'}
+                                title={overview?.branchCount}
                                 content={'Bệnh viện'}
                             />
                             <Card
+                                src={ICH12}
+                                title={overview?.patientCount}
+                                content={'Bệnh nhân'}
+                            />
+                            <Card
                                 src={ICH9}
-                                title={'50+'}
+                                title={overview?.departmentCount}
                                 content={'Chuyên khoa'}
                             />
                             <Card
                                 src={ICH10}
-                                title={'1000+'}
+                                title={overview?.accountCount}
                                 content={'Bác sĩ'}
                             />
                             {/* <Card

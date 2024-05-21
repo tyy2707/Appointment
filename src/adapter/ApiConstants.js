@@ -7,6 +7,7 @@ const ApiConstants = {
     DEPARTMENT_DOCTOR: `/department/doctor`,
     LOGIN: '/account/login',
     SIGNUP: '/account',
+    UPDATE_PASS: '/account/change-password',
     PATIENT: `/patient`,
     DOCTOR: `/account/doctor`,
     SCHEDULE: `/schedule`,
@@ -14,6 +15,7 @@ const ApiConstants = {
     FEEDBACK: `/feedback`,
     QUESTION: `/question`,
     BOOKING_CHART: `/booking/chart`,
+    OVERVIEW: `/booking/overview`,
     BOOKING_TOP: `/booking/top`,
 
 

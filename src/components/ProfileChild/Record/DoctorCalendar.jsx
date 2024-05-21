@@ -84,52 +84,6 @@ const DoctorCalendar = () => {
     const watchService = Form.useWatch('service', form);
     const watchTime = Form.useWatch('time', form);
 
-    // function checkTimeService() {
-    //     if (watchTime) {
-    //         if (watchService == 1) {
-    //             console.log("🚀 ~ checkTimeService ~ watchService:", watchService)
-    //             if (
-    //                 (watchTime[0]?.$H < 7 && watchTime[1]?.$H > 17) // Cả hai
-    //                 || (watchTime[0]?.$H < 7 || watchTime[1]?.$H > 17) // Thời gian bắt đầu nhỏ hơn 7 hoặc thời gian kết thúc lớn hơn 17
-    //             ) {
-    //                 form.setFields([
-    //                     {
-    //                         name: 'time',
-    //                         errors: ['Thời gian Khám trong giờ bắt đầu từ 07h00 - 17h00'],
-    //                     },
-    //                 ]);
-    //             }
-    //             return false
-    //         }
-    //         else if (
-    //             watchService === 2 &&
-    //             (
-
-    //                 (watchTime[0]?.$H < 17 && watchTime[1]?.$H > 19) // Cả hai
-    //                 || (watchTime[0]?.$H < 17 || watchTime[1]?.$H > 19) // Thời gian bắt đầu nhỏ hơn 7 hoặc thời gian kết thúc lớn hơn 17
-    //             )
-    //         ) {
-    //             form.setFields([
-    //                 {
-    //                     name: 'time',
-    //                     errors: ['Thời gian Khám trong giờ bắt đầu từ 17h00 - 19h00'],
-    //                 },
-    //             ]);
-    //             return false
-    //         }
-    //         else {
-    //             form.setFields([
-    //                 {
-    //                     name: 'time',
-    //                     errors: null,
-    //                 },
-    //             ]);
-    //             return true
-    //         }
-    //     }
-    //     return true
-    // }
-
     function checkTimeService() {
         if (watchTime) {
             if (watchService === 1) {
