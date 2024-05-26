@@ -27,7 +27,7 @@ const Router = () => {
         <Route path="*" element={<NotFound />} />
         <Route
           path="/" element={
-            <Layout>
+            <Layout isShowChat>
               <HomePage />
             </Layout>}
         />

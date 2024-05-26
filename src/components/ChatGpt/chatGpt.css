@@ -1,0 +1,146 @@
+.container-ChatGPT {
+  border-radius: 12px;
+  height: 520px;
+  width: 520px;
+  padding: 5px 0px;
+  bottom: 50px;
+  right: 90px;
+  background-color: #05ccf8;
+  position: fixed;
+
+  @media screen and (max-width: 1368px) {
+    width: 450px;
+    margin-top: -86vh;
+    height: 87vh;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+  -webkit-animation: fadeIn 0.5s ease-in;
+  -moz-animation: fadeIn 0.5s ease-in;
+  -o-animation: fadeIn 0.5s ease-in;
+  -ms-animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container-chat {
+  width: 100%;
+  height: 93%;
+  border-radius: 0px 0px 10px 10px;
+  display: block;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @media screen and (max-width: 1368px) {
+    height: 79vh;
+  }
+}
+
+.message {
+  /* position: absolute;
+    z-index: 1300; */
+    height: 70%;
+}
+
+.message-box-chat {
+  height: 390px;
+  overflow: scroll;
+  width: 100%;
+  padding: 6px 0px;
+
+  @media screen and (max-width: 1368px) {
+    height: 475px;
+  }
+}
+
+.message-user {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.message-bot {
+  justify-content: flex-start;
+  display: flex;
+}
+
+.message-i {
+  background-color: rgba(96, 168, 250, 0.25);
+  padding: 6px 15px;
+  width: 102%;
+  border-radius: 20px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+}
+
+.InputT {
+  border: none;
+  bottom: 0;
+  color: #000;
+  left: 0;
+  outline-offset: -5px;
+  position: absolute;
+  resize: none;
+  transition: background-color .2s ease 0s, box-shadow .2s ease 0s;
+}
+
+.textinput-chat {
+  background-color: transparent;
+  border-top: 1px solid gray;
+  width: 86%;
+  border: none;
+  outline: none;
+  margin-top: -2px;
+  padding: 2px 14px;
+  font-size: 19px;
+}
+
+.box-typing {
+  height: 161px;
+  z-index: 1500;
+}
+
+.send-btn {
+  font-size: 25px;
+  height: 100%;
+  width: 10%;
+  position: relative;
+  bottom: 108px;
+  left: 367px;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-field {
+  width: 100%;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  padding-top: 19px;
+  max-height: 59px;
+  overflow-y: auto;
+  background-color: transparent;
+  resize: none;
+  overflow: hidden;
+  min-height: 36px;
+  box-sizing: border-box;
+}

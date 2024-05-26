@@ -3,6 +3,7 @@ import { DatePicker, Select, Tabs } from "antd";
 import ChartYear from "./ChartYear";
 import Constants from "../../../../utils/constants";
 import dayjs from "dayjs";
+import { Button } from "@mui/material";
 
 const Statistical = () => {
   const [year, setYear] = useState(2024);
@@ -16,7 +17,11 @@ const Statistical = () => {
     setMonth(key?.month() + 1)
     setYear(key?.$y)
   };
-
+  function handleReset(){
+    setStatus(1)
+    setMonth()
+    setYear(dayjs('2024-05-01').$y)
+  }
   return (
     <div className="booking-container" style={{ overflow: 'scroll', height: '100vh' }}>
       <div className="booking-title">
@@ -25,9 +30,10 @@ const Statistical = () => {
 
       <div className="booking-title">
         <div style={{ float: 'right', display: 'flex', gap: 15 }}>
-          <Select defaultValue={1} options={Constants.optionsStatusBooking} onChange={setStatus} placeholder="Trạng thái" />
+          <Select value={Status} defaultValue={1} options={Constants.optionsStatusBooking} onChange={setStatus} placeholder="Trạng thái" />
           <DatePicker defaultValue={dayjs('2024-05-01')} onChange={handleChangeYear} picker="year" placeholder="Năm" />
           <DatePicker defaultValue={dayjs('2024-05-01')} onChange={handleChangeMonth} picker="month" placeholder="Tháng" />
+          <Button variant="contained" onClick={handleReset} >Mặc định</Button>
         </div>
       </div>
 

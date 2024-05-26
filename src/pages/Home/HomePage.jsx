@@ -80,7 +80,6 @@ const HomePage = ({ isShowLogin }) => {
 
     async function getOverview() {
         const response = await Factories.getOverview();
-        console.log("🚀 ~ getOverview ~ response:", response)
         if (response) {
             setOverView(response)
         } else {
