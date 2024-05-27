@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart, registerables } from 'chart.js';
-import BookingFactories from '../../../../services/BookingFactories';
 import { ToastNotiError } from '../../../../utils/Utils';
 import { Spin } from 'antd';
 import Factories from '../../../../services/FactoryApi';
-Chart.register(...registerables);
 
 const ChartYear = (props) => {
     const { year = 2024, month = 5, Status = 4 } = props;

@@ -130,14 +130,14 @@ const Record = props => {
                                     <Box
                                         onClick={() => handleClickBox(item)}
                                         actions={[
-                                            <button key="del"
-                                                onClick={() => {
-                                                    handleClicDelete(item?._id)
-                                                }}
-                                            // onClick={() => handleClickDel(item.id)}
-                                            >
-                                                <DeleteOutlined style={{ color: '#ff3b30' }} />
-                                            </button>,
+                                            // <button key="del"
+                                            //     onClick={() => {
+                                            //         handleClicDelete(item?._id)
+                                            //     }}
+                                            // // onClick={() => handleClickDel(item.id)}
+                                            // >
+                                            //     <DeleteOutlined style={{ color: '#ff3b30' }} />
+                                            // </button>,
                                             <button key="edit"><EditOutlined style={{ color: '#00b5f1' }} onClick={() => navigator(`/update-profile/${item._id}`)} /> </button>,
                                             <button key="info"><InfoOutlined
                                                 onClick={() => {
